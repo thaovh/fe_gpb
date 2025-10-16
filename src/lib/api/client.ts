@@ -524,13 +524,21 @@ class ApiClient {
 
     private loadTokenFromStorage() {
         try {
+            // Try to get token from auth store first
             const authData = localStorage.getItem('auth-storage')
             if (authData) {
                 const parsed = JSON.parse(authData)
                 this.token = parsed.state?.token || null
             }
+
+            // Fallback to direct localStorage
+            if (!this.token) {
+                this.token = localStorage.getItem('auth-token')
+            }
         } catch (error) {
             console.warn('Failed to parse auth storage:', error)
+            // Fallback to direct localStorage
+            this.token = localStorage.getItem('auth-token')
         }
     }
 

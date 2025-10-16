@@ -17,9 +17,11 @@ interface AuthState {
     refreshToken: string | null
     isAuthenticated: boolean
     isLoading: boolean
+    isInitialized: boolean
     login: (token: string, refreshToken: string, user: User) => void
     logout: () => void
     setLoading: (loading: boolean) => void
+    setInitialized: (initialized: boolean) => void
     updateTokens: (token: string, refreshToken: string) => void
 }
 
@@ -31,6 +33,7 @@ export const useAuthStore = create<AuthState>()(
             refreshToken: null,
             isAuthenticated: false,
             isLoading: false,
+            isInitialized: false,
 
             login: (token: string, refreshToken: string, user: User) => {
                 set({
@@ -39,7 +42,14 @@ export const useAuthStore = create<AuthState>()(
                     user,
                     isAuthenticated: true,
                     isLoading: false,
+                    isInitialized: true,
                 })
+                // Lưu vào localStorage để đảm bảo persistence
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem('auth-token', token)
+                    localStorage.setItem('auth-refresh-token', refreshToken)
+                    localStorage.setItem('auth-user', JSON.stringify(user))
+                }
             },
 
             logout: () => {
@@ -49,15 +59,31 @@ export const useAuthStore = create<AuthState>()(
                     refreshToken: null,
                     isAuthenticated: false,
                     isLoading: false,
+                    isInitialized: true,
                 })
+                // Xóa khỏi localStorage
+                if (typeof window !== 'undefined') {
+                    localStorage.removeItem('auth-token')
+                    localStorage.removeItem('auth-refresh-token')
+                    localStorage.removeItem('auth-user')
+                }
             },
 
             setLoading: (loading: boolean) => {
                 set({ isLoading: loading })
             },
 
+            setInitialized: (initialized: boolean) => {
+                set({ isInitialized: initialized })
+            },
+
             updateTokens: (token: string, refreshToken: string) => {
                 set({ token, refreshToken })
+                // Cập nhật localStorage
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem('auth-token', token)
+                    localStorage.setItem('auth-refresh-token', refreshToken)
+                }
             },
         }),
         {
@@ -67,6 +93,7 @@ export const useAuthStore = create<AuthState>()(
                 token: state.token,
                 refreshToken: state.refreshToken,
                 isAuthenticated: state.isAuthenticated,
+                isInitialized: state.isInitialized,
             }),
         }
     )

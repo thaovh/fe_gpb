@@ -30,8 +30,7 @@ import {
     Stethoscope,
     Package,
     Ruler,
-    TestTube,
-    Wrench
+    TestTube
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -45,50 +44,104 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     const router = useRouter()
 
     const navigation = [
-        { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
         {
-            name: 'Quản lý danh mục',
-            icon: Users,
-            children: [
-                { name: 'Danh mục', href: '/categories', icon: Users },
-                { name: 'Chi nhánh', href: '/branches', icon: Building2 },
-            ]
+            name: 'Dashboard',
+            href: '/dashboard',
+            icon: LayoutDashboard,
+            description: 'Tổng quan hệ thống và thống kê'
         },
         {
-            name: 'Quản lý địa điểm',
-            icon: MapPin,
+            name: 'Danh mục',
+            icon: Users,
+            description: 'Quản lý dữ liệu cơ bản và danh mục hệ thống',
             children: [
-                { name: 'Tỉnh/Thành phố', href: '/provinces', icon: MapPin },
-                { name: 'Phường/Xã', href: '/wards', icon: Home },
+                {
+                    name: 'Tỉnh/Thành phố',
+                    href: '/provinces',
+                    icon: MapPin,
+                    description: 'Quản lý danh sách tỉnh thành phố'
+                },
+                {
+                    name: 'Phường/Xã',
+                    href: '/wards',
+                    icon: Home,
+                    description: 'Quản lý danh sách phường xã theo tỉnh'
+                },
+                {
+                    name: 'Chi nhánh',
+                    href: '/branches',
+                    icon: Building2,
+                    description: 'Quản lý các chi nhánh bệnh viện'
+                },
+                {
+                    name: 'Loại khoa',
+                    href: '/department-types',
+                    icon: Building,
+                    description: 'Quản lý các loại khoa phòng'
+                },
+                {
+                    name: 'Khoa',
+                    href: '/departments',
+                    icon: Building2,
+                    description: 'Quản lý khoa phòng theo chi nhánh'
+                },
+                {
+                    name: 'Phòng',
+                    href: '/rooms',
+                    icon: Home,
+                    description: 'Quản lý phòng theo khoa'
+                },
+                {
+                    name: 'Nhóm dịch vụ',
+                    href: '/service-groups',
+                    icon: Package,
+                    description: 'Quản lý nhóm dịch vụ y tế'
+                },
+                {
+                    name: 'Đơn vị tính',
+                    href: '/unit-of-measures',
+                    icon: Ruler,
+                    description: 'Quản lý đơn vị đo lường'
+                },
+                {
+                    name: 'Dịch vụ',
+                    href: '/services',
+                    icon: Stethoscope,
+                    description: 'Quản lý dịch vụ y tế và giá cả'
+                },
+                {
+                    name: 'Loại mẫu',
+                    href: '/sample-types',
+                    icon: TestTube,
+                    description: 'Quản lý loại mẫu xét nghiệm'
+                },
+                {
+                    name: 'Danh mục chung',
+                    href: '/categories',
+                    icon: Users,
+                    description: 'Quản lý danh mục chung hệ thống'
+                },
             ]
         },
         {
             name: 'Quản lý nhân sự',
             icon: UserCheck,
+            description: 'Quản lý người dùng và phân quyền hệ thống',
             children: [
-                { name: 'Người dùng', href: '/users', icon: UserCheck },
-                { name: 'Loại khoa', href: '/department-types', icon: Building },
-                { name: 'Khoa', href: '/departments', icon: Building2 },
+                {
+                    name: 'Người dùng',
+                    href: '/users',
+                    icon: UserCheck,
+                    description: 'Quản lý tài khoản người dùng và phân quyền'
+                },
             ]
         },
         {
-            name: 'Quản lý dịch vụ',
-            icon: Stethoscope,
-            children: [
-                { name: 'Nhóm dịch vụ', href: '/service-groups', icon: Package },
-                { name: 'Đơn vị tính', href: '/unit-of-measures', icon: Ruler },
-                { name: 'Dịch vụ', href: '/services', icon: Stethoscope },
-            ]
+            name: 'Cài đặt',
+            href: '/settings',
+            icon: Settings,
+            description: 'Cấu hình hệ thống và tài khoản'
         },
-        {
-            name: 'Quản lý cơ sở hạ tầng',
-            icon: Wrench,
-            children: [
-                { name: 'Phòng', href: '/rooms', icon: Home },
-                { name: 'Loại mẫu', href: '/sample-types', icon: TestTube },
-            ]
-        },
-        { name: 'Cài đặt', href: '/settings', icon: Settings },
     ]
 
     async function handleSignOut() {
@@ -136,19 +189,83 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                                                 <ChevronDown className="h-3 w-3" />
                                             </Button>
                                         </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="start">
-                                            {item.children.map((child) => {
-                                                const ChildIcon = child.icon
-                                                return (
-                                                    <DropdownMenuItem
-                                                        key={child.name}
-                                                        onClick={() => router.push(child.href)}
-                                                    >
-                                                        <ChildIcon className="mr-2 h-4 w-4" />
-                                                        <span>{child.name}</span>
-                                                    </DropdownMenuItem>
-                                                )
-                                            })}
+                                        <DropdownMenuContent align="start" className="w-[800px] p-4">
+                                            <div className="grid grid-cols-3 gap-4">
+                                                {/* Cột 1: Địa lý & Tổ chức */}
+                                                <div className="space-y-1">
+                                                    <h4 className="text-sm font-semibold text-gray-900 mb-2 px-2">Địa lý & Tổ chức</h4>
+                                                    {item.children.slice(0, 3).map((child) => {
+                                                        const ChildIcon = child.icon
+                                                        return (
+                                                            <DropdownMenuItem
+                                                                key={child.name}
+                                                                onClick={() => router.push(child.href)}
+                                                                className="flex flex-col items-start p-3 cursor-pointer rounded-lg hover:bg-gray-50"
+                                                            >
+                                                                <div className="flex items-center w-full">
+                                                                    <ChildIcon className="mr-2 h-4 w-4 text-medical-600" />
+                                                                    <span className="font-medium text-sm">{child.name}</span>
+                                                                </div>
+                                                                {child.description && (
+                                                                    <span className="text-xs text-muted-foreground mt-1 ml-6">
+                                                                        {child.description}
+                                                                    </span>
+                                                                )}
+                                                            </DropdownMenuItem>
+                                                        )
+                                                    })}
+                                                </div>
+
+                                                {/* Cột 2: Y tế & Nhân sự */}
+                                                <div className="space-y-1">
+                                                    <h4 className="text-sm font-semibold text-gray-900 mb-2 px-2">Y tế & Nhân sự</h4>
+                                                    {item.children.slice(3, 6).map((child) => {
+                                                        const ChildIcon = child.icon
+                                                        return (
+                                                            <DropdownMenuItem
+                                                                key={child.name}
+                                                                onClick={() => router.push(child.href)}
+                                                                className="flex flex-col items-start p-3 cursor-pointer rounded-lg hover:bg-gray-50"
+                                                            >
+                                                                <div className="flex items-center w-full">
+                                                                    <ChildIcon className="mr-2 h-4 w-4 text-medical-600" />
+                                                                    <span className="font-medium text-sm">{child.name}</span>
+                                                                </div>
+                                                                {child.description && (
+                                                                    <span className="text-xs text-muted-foreground mt-1 ml-6">
+                                                                        {child.description}
+                                                                    </span>
+                                                                )}
+                                                            </DropdownMenuItem>
+                                                        )
+                                                    })}
+                                                </div>
+
+                                                {/* Cột 3: Dịch vụ & Mẫu */}
+                                                <div className="space-y-1">
+                                                    <h4 className="text-sm font-semibold text-gray-900 mb-2 px-2">Dịch vụ & Mẫu</h4>
+                                                    {item.children.slice(6).map((child) => {
+                                                        const ChildIcon = child.icon
+                                                        return (
+                                                            <DropdownMenuItem
+                                                                key={child.name}
+                                                                onClick={() => router.push(child.href)}
+                                                                className="flex flex-col items-start p-3 cursor-pointer rounded-lg hover:bg-gray-50"
+                                                            >
+                                                                <div className="flex items-center w-full">
+                                                                    <ChildIcon className="mr-2 h-4 w-4 text-medical-600" />
+                                                                    <span className="font-medium text-sm">{child.name}</span>
+                                                                </div>
+                                                                {child.description && (
+                                                                    <span className="text-xs text-muted-foreground mt-1 ml-6">
+                                                                        {child.description}
+                                                                    </span>
+                                                                )}
+                                                            </DropdownMenuItem>
+                                                        )
+                                                    })}
+                                                </div>
+                                            </div>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 )
@@ -160,6 +277,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                                     variant="ghost"
                                     className="flex items-center space-x-2"
                                     onClick={() => router.push(item.href)}
+                                    title={item.description}
                                 >
                                     <Icon className="h-4 w-4" />
                                     <span>{item.name}</span>
@@ -251,25 +369,42 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                                 if (item.children) {
                                     return (
                                         <div key={item.name} className="space-y-1">
-                                            <div className="flex items-center px-3 py-2 text-sm font-medium text-gray-500">
-                                                <Icon className="mr-3 h-5 w-5" />
-                                                {item.name}
+                                            <div className="px-3 py-2">
+                                                <div className="flex items-center text-sm font-medium text-gray-500">
+                                                    <Icon className="mr-3 h-5 w-5" />
+                                                    {item.name}
+                                                </div>
+                                                {item.description && (
+                                                    <p className="text-xs text-muted-foreground mt-1 ml-8">
+                                                        {item.description}
+                                                    </p>
+                                                )}
                                             </div>
                                             {item.children.map((child) => {
                                                 const ChildIcon = child.icon
                                                 return (
-                                                    <Button
-                                                        key={child.name}
-                                                        variant="ghost"
-                                                        className="w-full justify-start ml-6"
-                                                        onClick={() => {
-                                                            router.push(child.href)
-                                                            setSidebarOpen(false)
-                                                        }}
-                                                    >
-                                                        <ChildIcon className="mr-3 h-4 w-4" />
-                                                        {child.name}
-                                                    </Button>
+                                                    <div key={child.name} className="ml-6">
+                                                        <Button
+                                                            variant="ghost"
+                                                            className="w-full justify-start p-3 h-auto"
+                                                            onClick={() => {
+                                                                router.push(child.href)
+                                                                setSidebarOpen(false)
+                                                            }}
+                                                        >
+                                                            <div className="flex flex-col items-start w-full">
+                                                                <div className="flex items-center w-full">
+                                                                    <ChildIcon className="mr-3 h-4 w-4 text-medical-600" />
+                                                                    <span className="font-medium">{child.name}</span>
+                                                                </div>
+                                                                {child.description && (
+                                                                    <span className="text-xs text-muted-foreground mt-1 ml-7">
+                                                                        {child.description}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </Button>
+                                                    </div>
                                                 )
                                             })}
                                         </div>
@@ -280,14 +415,23 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                                     <Button
                                         key={item.name}
                                         variant="ghost"
-                                        className="w-full justify-start"
+                                        className="w-full justify-start p-3 h-auto"
                                         onClick={() => {
                                             router.push(item.href)
                                             setSidebarOpen(false)
                                         }}
                                     >
-                                        <Icon className="mr-3 h-5 w-5" />
-                                        {item.name}
+                                        <div className="flex flex-col items-start w-full">
+                                            <div className="flex items-center w-full">
+                                                <Icon className="mr-3 h-5 w-5 text-medical-600" />
+                                                <span className="font-medium">{item.name}</span>
+                                            </div>
+                                            {item.description && (
+                                                <span className="text-xs text-muted-foreground mt-1 ml-8">
+                                                    {item.description}
+                                                </span>
+                                            )}
+                                        </div>
                                     </Button>
                                 )
                             })}
